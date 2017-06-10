@@ -1,13 +1,8 @@
-//画布大小
+
 
 var app = new PIXI.Application(screen.width,screen.height,{backgroundColor:0x99cc99});
-//html document 文档
 document.body.appendChild(app.view);
-var basicText = new PIXI.Text('2048 Game!');
 
-basicText.anchor.set(0.5);
-basicText.x = app.renderer.width / 2;
-basicText.y = app.renderer.height / 4;
 var style = new PIXI.TextStyle({
     fontFamily: 'Arial',
     fontSize: 20,
@@ -24,39 +19,36 @@ var style = new PIXI.TextStyle({
     wordWrap: true,
     wordWrapWidth: 440
 });
-
 var richText = new PIXI.Text('2048 Game!', style);
 richText.anchor.set(0.5);
 richText.x = app.renderer.width / 2;
 richText.y = app.renderer.height / 4;
-
 app.stage.addChild(richText);
 
-
-//app.stage.addChild(basicText);
+var width =  app.renderer.width;
 
 var grid = [];
 for(var i = 0 ; i < 4 ; i++ ){
 	grid[i] = [0,0,0,0];
 } 
 
-var width =  app.renderer.width;
 
 function genernetNumberRandom(){
 	return Math.floor(Math.random() * 4);
-}
-
-for(var i = 0 ; i < 4 ; i ++ ){
-	for(var j = 0 ; j < 4 ; j++){
-		drawCell(i,j);
-	}
 }
 var rowIndex = genernetNumberRandom();
 var columIndex = genernetNumberRandom();
 //var number = genernetNumberRandom();
 var number = 2;
 grid[rowIndex][columIndex] = number;
-drawCell(rowIndex,columIndex);
+
+for(var i = 0 ; i < 4 ; i ++ ){
+	for(var j = 0 ; j < 4 ; j++){
+		drawCell(i,j);
+	}
+}
+
+//drawCell(rowIndex,columIndex);
 
 function drawCell(x,y){
 
