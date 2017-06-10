@@ -31,18 +31,24 @@ var width =  app.renderer.width;
 
 var grid = [];
 for(var i = 0 ; i < 4 ; i++ ){
-	grid[i] = [2,2,0,0];
+	grid[i] = [0,0,0,0];
 } 
 
 
 function genernetNumberRandom(){
 	return Math.floor(Math.random() * 4);
 }
-var rowIndex = genernetNumberRandom();
-var columIndex = genernetNumberRandom();
-//var number = genernetNumberRandom();
-//var number = 2;
-//grid[rowIndex][columIndex] = number;
+function addRandomCell(){
+	var rowIndex = genernetNumberRandom();
+	var columIndex = genernetNumberRandom();
+	var number = 2;
+	while(grid[rowIndex][columIndex] !== 0 ){
+		rowIndex = genernetNumberRandom();
+		columIndex = genernetNumberRandom();
+	}
+	grid[rowIndex][columIndex] = number;
+	
+}
 
 function flushUI(){
 	for(var i = 0 ; i < 4 ; i ++ ){
@@ -51,8 +57,8 @@ function flushUI(){
 		}
 	}
 }
-	
-flushUI();
+
+
 
 
 function drawCell(x,y){
@@ -69,7 +75,7 @@ function drawCell(x,y){
 
 	app.stage.addChild(graphics);
 
-	if(grid[x][y] != 0 )
+	if(grid[x][y] !== 0 )
 		app.stage.addChild(showNumber);	
 }
 
@@ -94,10 +100,12 @@ function moveCellToRight() {
                 grid[rowIndex][theEmptyCellIndex] = grid[rowIndex][columnIndex];
                 grid[rowIndex][columnIndex] = 0;
 
-                if (grid[rowIndex][theEmptyCellIndex] === grid[rowIndex][theEmptyCellIndex + 1]) {
-                    grid[rowIndex][theEmptyCellIndex+ 1] += grid[rowIndex][theEmptyCellIndex];
-                    grid[rowIndex][theEmptyCellIndex] = 0;
-                }
+            }
+            var currentIndex = theEmptyCellIndex === -1 ? columnIndex : theEmptyCellIndex;
+
+            if (grid[rowIndex][currentIndex] === grid[rowIndex][currentIndex + 1]) {
+                grid[rowIndex][currentIndex+ 1] += grid[rowIndex][currentIndex];
+                grid[rowIndex][currentIndex] = 0;
             }
 
         }
@@ -106,18 +114,64 @@ function moveCellToRight() {
 
 function getColorByNumber(number){
 	var colorValue = {
-		2:0xd9bf77,
-		4:0xf0f79b,
-		0:0xffffcc
+		2:0xcc9966,
+		4:0xffff99,
+		0:0xffffcc,
+		8:0x99cc99
 	}
-	return colorValue[number];
+	var color = colorValue[number];
+	if(colorValue[number] === undefined)
+		color = 0xffffcc;
+	return color;
 }
 
+
+function rotateArray(rotateCount = 1) {
+    for (var i = 0 ; i < rotateCount; i ++) {
+        grid = rotateArrayToRightOnce(grid);
+    }
+
+    function rotateArrayToRightOnce(array) {
+        return array.map((row, rowIndex) => {
+            return row.map((item, columnIndex) => {
+                return array[3 - columnIndex][rowIndex];
+            })
+        })
+    }
+}
+addRandomCell();
+addRandomCell();
+flushUI();
 document.addEventListener("keydown",function(event){
 	if(event.key === 'ArrowRight')
 	{
 		moveCellToRight();
+		addRandomCell();
 		flushUI();
 	}
+
+    if (event.key === 'ArrowUp') {
+        rotateArray(1);
+        moveCellToRight();
+        rotateArray(3);
+        addRandomCell();
+        flushUI();
+    }
+
+    if (event.key === 'ArrowLeft') {
+        rotateArray(2);
+        moveCellToRight();
+        rotateArray(2);
+        addRandomCell();
+        flushUI();
+    }
+
+    if (event.key === 'ArrowDown') {
+        rotateArray(3);
+        moveCellToRight();
+        rotateArray(1);
+        addRandomCell();
+        flushUI();
+    }
 });
 
