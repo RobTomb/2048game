@@ -39,38 +39,52 @@ var grid = [];
 for(var i = 0 ; i < 4 ; i++ ){
 	grid[i] = [0,0,0,0];
 } 
-var graphics = new PIXI.Graphics();
+
 var width =  app.renderer.width;
-// set a fill and line style
-graphics.lineStyle(3, 0x99cc99, 1);
-graphics.beginFill(0xffffcc, 1);
-for(var i = 0 ; i < 4 ; i++ ){
-	for(var j = 0 ; j < 4 ; j ++ ){
-		graphics.drawRect(app.renderer.width/8+j*width/5-5,app.renderer.height/8*3+i*width/5 , width /5,width/5);
-	}
-}
-app.stage.addChild(graphics);
 
 function genernetNumberRandom(){
 	return Math.floor(Math.random() * 4);
 }
-/*
-var number = genernetNumberRandom();
-var showNumber = PIXI.Text(number,{fontSize:15px;});
 
-*/
-var showNumber = new PIXI.Text(genernetNumberRandom());
-var x = genernetNumberRandom();
-var y = genernetNumberRandom();
+for(var i = 0 ; i < 4 ; i ++ ){
+	for(var j = 0 ; j < 4 ; j++){
+		drawCell(i,j);
+	}
+}
+var rowIndex = genernetNumberRandom();
+var columIndex = genernetNumberRandom();
+//var number = genernetNumberRandom();
+var number = 2;
+grid[rowIndex][columIndex] = number;
+drawCell(rowIndex,columIndex);
 
-showNumber.anchor.set(0.5);
-showNumber.x = app.renderer.width/8+x*width/5-5+width/10;
-showNumber.y = app.renderer.height/8*3+y*width/5+width/10;
-var changeGraphics = new PIXI.Graphics();
-changeGraphics.lineStyle(3,0x99cc99,1);
-changeGraphics.beginFill(0xd9bf77,1);
-changeGraphics.drawRect(app.renderer.width/8+x*width/5-5,app.renderer.height/8*3+y*width/5,width/5,width/5);
-app.stage.addChild(changeGraphics);
-app.stage.addChild(showNumber);
+function drawCell(x,y){
 
+	var color;
+
+	if(grid[x][y] === 2){
+		color = 0xd9bf77;
+	}else{
+		color = 0xffffcc;
+	}
+
+	var showNumber = new PIXI.Text(grid[x][y]);
+	showNumber.anchor.set(0.5);
+	showNumber.x = app.renderer.width/8+y*width/5-5+width/10;
+	showNumber.y = app.renderer.height/8*3+x*width/5+width/10;
+
+	var graphics = new PIXI.Graphics();
+	graphics.beginFill(color, 1);
+	graphics.lineStyle(3, 0x99cc99, 1);
+	graphics.drawRect(app.renderer.width/8+y*width/5-5,app.renderer.height/8*3+x*width/5 , width /5,width/5);
+
+	app.stage.addChild(graphics);
+	if(grid[x][y] != 0 )
+		app.stage.addChild(showNumber);	
+}
+
+document.addEventListener("keydown",function(event){
+	if(event.key === 'ArrowRight')
+		console.log(event.key);
+});
 
